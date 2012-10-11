@@ -5868,3 +5868,9 @@ body {
 .game .ampm {
     text-transform: lowercase;
 }
+.loading {
+    color: #fff;
+    text-align: center;
+    position: absolute;
+    width: 90%;
+}

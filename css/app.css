@@ -5865,3 +5865,6 @@ body {
 .game td {
     border: none;
 }
+.game .ampm {
+    text-transform: lowercase;
+}

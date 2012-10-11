@@ -57,7 +57,7 @@
         <td class="">
             <% if (is_after_game()) { %>Final<% } %>
             <% if (is_before_game()) { %>
-                <div><%= home().get("time") %> <%= home().get("time_zone") %></div>
+                <div><%= home().get("time") %><span class='ampm'><%= home().get("ampm") %></span> <%= home().get("time_zone") %></div>
                 <div><%= local_time() %><% } %></div>
             <% if (is_during_game()) { %>
                 <% if (is_top_of_inning()) { %><i class="icon-chevron-up icon-white"></i><%= inning() %><% } %>

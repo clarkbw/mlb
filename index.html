@@ -1,1 +1,83 @@
-Setting up pages...
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <link rel="icon" href="/img/icon-16.png" type="image/png">
+    <link rel="shortcut icon" href="/img/icon-16.png" type="image/png">
+
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="/img/icon-128.png">
+
+    <link href="css/app.css" rel="stylesheet">
+</head>
+<body>
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+
+                <a class="brand" href="#">MLB</a>
+
+                <ul class="nav pull-right">
+                    <li class="dropdown"></li>
+                </ul>
+             </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <table class="table">
+            <tbody id="games">
+                
+            </tbody>
+        </table>
+
+        <div style="text-align: center;">
+            <a class="btn btn-primary webapp-install">Install</a>
+        </div>
+<!-- For multiple day scores
+        <div class="btn-group" style="width:100%;text-align: center;">
+            <a class="btn btn-large disabled"><i class="icon-backward"></i></a>
+            <a class="btn btn-large disabled">Today</a>
+            <a class="btn btn-large"><i class="icon-forward"></i></a>
+        </div>
+-->
+    </div>
+
+    <script type="text/template" id="game-template">
+        <td class="icons">
+            <div><img src="http://mlb.mlb.com/shared/flash/gameday/v5.2/assets/images/chyronlogos/<%= away().get('team_id') %>.png" alt=""/></div>
+            <div><img src="http://mlb.mlb.com/shared/flash/gameday/v5.2/assets/images/chyronlogos/<%= home().get('team_id') %>.png" alt=""/></div>
+        <td class="team_name away">
+            <div><%= away().get("team_name") %></div>
+            <div><%= home().get("team_name") %></div>
+        </td>
+        <td class="">
+            <% if (is_after_game()) { %>Final<% } %>
+            <% if (is_before_game()) { %>
+                <div><%= home().get("time") %> <%= home().get("time_zone") %></div>
+                <div><%= local_time() %><% } %></div>
+            <% if (is_during_game()) { %>
+                <% if (is_top_of_inning()) { %><i class="icon-chevron-up icon-white"></i><%= inning() %><% } %>
+                <% if (is_bottom_of_inning()) { %><i class="icon-chevron-down icon-white"></i><%= inning() %><% } %>
+            <% } %>
+        </td>
+        <td class="">
+            <div><%= away().runs() %></div>
+            <div><%= home().runs() %></div>
+        </td>
+    </script>
+
+    <script type="text/template" id="game-list-template">
+    <div class="game-wrapper">
+      <div class="team_name home"><%= get("home_team_name") %></div>
+      <div class="team_name away"><%= get("away_team_name") %></div>
+    </div>
+    </script>
+
+    <!-- Load the main app module via the module loader -->
+    <script async data-main="js/app" src="js/app.js" charset="utf-8"></script>
+</body>
+</html>

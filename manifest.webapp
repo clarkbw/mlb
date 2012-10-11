@@ -4,9 +4,9 @@
   "launch_path" : "/mlb/",
   "description": "MLB Scoreboard shows the latest scores for MLB games",
   "icons": {
-    "16": "/img/icon-16.png",
-    "48": "/img/icon-48.png",
-    "128": "/img/icon-128.png"
+    "16": "/mlb/img/icon-16.png",
+    "48": "/mlb/img/icon-48.png",
+    "128": "/mlb/img/icon-128.png"
   },
   "developer": {
     "name": "Bryan Clark",

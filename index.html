@@ -50,24 +50,54 @@
         <td class="icons">
             <div><img src="http://mlb.mlb.com/shared/flash/gameday/v5.2/assets/images/chyronlogos/<%= away().get('team_id') %>.png" alt=""/></div>
             <div><img src="http://mlb.mlb.com/shared/flash/gameday/v5.2/assets/images/chyronlogos/<%= home().get('team_id') %>.png" alt=""/></div>
+        </td>
         <td class="team_name away">
             <div><%= away().get("team_name") %></div>
             <div><%= home().get("team_name") %></div>
         </td>
         <td class="">
-            <% if (is_after_game()) { %>Final<% } %>
+            <% if (is_after_game()) { %>
+                Final<% if (has_extra_innings()) { %> / <%= inning() %><% } %>
+            <% } %>
             <% if (is_before_game()) { %>
                 <div><%= home().get("time") %><span class='ampm'><%= home().get("ampm") %></span> <%= home().get("time_zone") %></div>
                 <div><%= local_time() %><% } %></div>
             <% if (is_during_game()) { %>
-                <% if (is_top_of_inning()) { %><i class="icon-chevron-up icon-white"></i><%= inning() %><% } %>
-                <% if (is_bottom_of_inning()) { %><i class="icon-chevron-down icon-white"></i><%= inning() %><% } %>
+                <% if (is_top_of_inning()) { %><i class="icon-chevron-up icon-white"></i><% } %>
+                <% if (is_bottom_of_inning()) { %><i class="icon-chevron-down icon-white"></i><% } %>
+                <%= inning() %><%= inning_ordinal() %>
             <% } %>
         </td>
+        <% if(is_during_game() && is_not_out()) { %>
+            <td class="hidden-phone">
+                <div class="count">
+                    <% if (is_at_bat()) { %>
+                        <%= balls() %>-<%= strikes() %>, 
+                    <% } %>
+                <%= outs() %> out<%= outs() !== "1" ? "s" : "" %>
+                </div>
+            </td>
+        <% } %>
+        <% if(is_post_season()) { %>
+            <td class="hidden-phone">
+                <div class=""><%= get("description") %></div>
+                <% if (!is_after_game()) { %>
+                    <div class=""><%= get("status").status %></div>
+                <% } %>
+            </td>
+        <% } %>
         <td class="">
             <div><%= away().runs() %></div>
             <div><%= home().runs() %></div>
         </td>
+            <% if (is_after_game()) { %>
+            <td class="hidden-phone">
+                <ul class="unstyled">
+                    <li><a target="_blank" href="http://mlb.mlb.com/mlb/gameday/index.jsp?gid=<%= get("gameday") %>&mode=wrap&partnerId=Firefox" class="btn btn-mini" title="Game Wrap for <%= away().get("name_abbrev") %> at <%= home().get("name_abbrev") %>">Wrap</a></li>
+                    <li><a target="_blank" href="http://mlb.mlb.com/mlb/gameday/index.jsp?gid=<%= get("gameday") %>&mode=video&partnerId=Firefox" class="btn btn-mini" title="Watch Game Highlights for <%= away().get("name_abbrev") %> at <%= home().get("name_abbrev") %>">Highlights</a></li>
+                </ul>
+            </td>
+            <% } %>
     </script>
 
     <!-- Load the main app module via the module loader -->

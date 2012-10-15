@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <link rel="icon" href="img/icon-16.png" type="image/png">
+    <link rel="shortcut icon" href="img/icon-16.png" type="image/png">
+
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="img/icon-128.png">
+
+    <link href="css/app.css" rel="stylesheet">
+</head>
+<body>
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+
+                <a class="brand" href="#">MLB</a>
+
+                <ul class="nav pull-right">
+                    <li class="dropdown"></li>
+                </ul>
+             </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h3 class="loading">Loading...</h3>
+        <table class="table">
+            <tbody id="games">
+            </tbody>
+        </table>
+
+        <div style="text-align: center;">
+            <a style="display: none;" class="btn btn-primary webapp-install">Install</a>
+        </div>
+
+<!--
+            <div class="btn-group" style="width:100%;text-align: center;">
+            <a class="btn btn-large disabled"><i class="icon-backward"></i></a>
+            <a class="btn btn-large disabled">Today</a>
+            <a class="btn btn-large"><i class="icon-forward"></i></a>
+        </div>
+-->
+    </div>
+
+    <script type="text/template" id="game-template">
+        <td class="icons">
+            <div><img src="http://mlb.mlb.com/shared/flash/gameday/v5.2/assets/images/chyronlogos/<%= away().get('team_id') %>.png" alt=""/></div>
+            <div><img src="http://mlb.mlb.com/shared/flash/gameday/v5.2/assets/images/chyronlogos/<%= home().get('team_id') %>.png" alt=""/></div>
+        </td>
+        <td class="team_name away">
+            <div><%= away().get("team_name") %></div>
+            <div><%= home().get("team_name") %></div>
+        </td>
+        <td class="">
+            <% if (is_after_game()) { %>
+                Final<% if (has_extra_innings()) { %> / <%= inning() %><% } %>
+            <% } %>
+            <% if (is_before_game()) { %>
+                <div><%= home().get("time") %><span class='ampm'><%= home().get("ampm") %></span> <%= home().get("time_zone") %></div>
+                <div><%= local_time() %><% } %></div>
+            <% if (is_during_game()) { %>
+                <% if (is_top_of_inning()) { %><i class="icon-chevron-up icon-white"></i><% } %>
+                <% if (is_bottom_of_inning()) { %><i class="icon-chevron-down icon-white"></i><% } %>
+                <%= inning() %><%= inning_ordinal() %>
+            <% } %>
+        </td>
+        <% if(is_during_game() && is_not_out()) { %>
+            <td class="hidden-phone">
+                <div class="count">
+                    <% if (is_at_bat()) { %>
+                        <%= balls() %>-<%= strikes() %>, 
+                    <% } %>
+                <%= outs() %> out<%= outs() !== "1" ? "s" : "" %>
+                </div>
+            </td>
+        <% } %>
+        <% if(is_post_season()) { %>
+            <td class="hidden-phone">
+                <div class=""><%= get("description") %></div>
+                <% if (!is_after_game()) { %>
+                    <div class=""><%= get("status").status %></div>
+                <% } %>
+            </td>
+        <% } %>
+        <td class="">
+            <div><%= away().runs() %></div>
+            <div><%= home().runs() %></div>
+        </td>
+            <% if (is_after_game()) { %>
+            <td class="hidden-phone">
+                <ul class="unstyled">
+                    <li><a target="_blank" href="http://mlb.mlb.com/mlb/gameday/index.jsp?gid=<%= get("gameday") %>&mode=wrap&partnerId=Firefox" class="btn btn-mini" title="Game Wrap for <%= away().get("name_abbrev") %> at <%= home().get("name_abbrev") %>">Wrap</a></li>
+                    <li><a target="_blank" href="http://mlb.mlb.com/mlb/gameday/index.jsp?gid=<%= get("gameday") %>&mode=video&partnerId=Firefox" class="btn btn-mini" title="Watch Game Highlights for <%= away().get("name_abbrev") %> at <%= home().get("name_abbrev") %>">Highlights</a></li>
+                </ul>
+            </td>
+            <% } %>
+    </script>
+
+    <!-- Load the main app module via the module loader -->
+    <script async data-main="js/app" src="js/lib/require.js" charset="utf-8"></script>
+</body>
+</html>

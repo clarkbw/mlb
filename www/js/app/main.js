@@ -4,16 +4,22 @@
   strict:true, undef:true, curly:true, browser:true, es5:true, indent:2,
   maxerr:50, nomen:false */
 
+'use strict';
 
 define(function (require) {
 
   var $ = require('jquery'),
-      _ = require("underscore"),
-      Backbone = require("backbone"),
+      Backbone = require('backbone'),
+      moment = require('moment'),
       install = require('install'),
-      $mobile = require("jquery.mobile-1.2.0"),
+      Hammer = require('hammer'),
       enabledClick = false;
 
+  require('jquery.hammer');
+  require('jqueryui/effect');
+  require('jqueryui/effect-slide');
+  require('bootstrap/collapse');
+  
   function onInstallStateChange() {
     //Make sure DOM is ready before modifying it.
     $(function () {
@@ -53,53 +59,130 @@ define(function (require) {
   $(function () {
     install.on('change', onInstallStateChange);
 
-    var GameDay = new GameList();
-    var GameDayView = new GameListView({collection : GameDay,
-                                       el : $("#games")});
-
-    // use localstorage to pull out previous game data while we download
-    if ('localStorage' in window && window.localStorage !== null) {
-      var games = localStorage.getItem("games");
-      if (games) {
-        GameDay.reset(JSON.parse(games));
-      }
-    }
-
-    // set the jquery-mobile properties
-    $(document).bind("mobileinit", function () {
-        // Make your jQuery Mobile framework configuration changes here!
-      $.mobile.autoInitializePage = false;
-      $.mobile.touchOverflowEnabled = true;
-      $.event.special.swipe.horizontalDistanceThreshold = "100px";
-    });
-
-    // Swipe left means go forward one day
-    $(document).bind("swipeleft", function () {
-      //alert("swipeleft");
-    });
-
-    // Swipe right means go back one day
-    $(document).bind("swiperight", function () {
-      //alert("swiperight");
-    });
-
-    // the Backbon.Collection.fetch() options
-    var fetch = {
-      success : function success(collection, response) {
-        // If localstorage exists save our data so we can retrive it later
-        if ('localStorage' in window && window.localStorage !== null) {
-          localStorage.setItem("games", JSON.stringify(collection.toJSON()));
-        }
-      }
-    };
-
-    // every 45 seconds do another fetch from the server
-    window.setInterval(function () { GameDay.fetch(fetch); }, 45 * 1000);
-
-    // Run an immediate fetch now
-    GameDay.fetch(fetch);
-
     // check immediately for installation to show/hide the install button
     onInstallStateChange();
+
+    var MLBRouter = Backbone.Router.extend({
+      routes: {
+        ":year/:month/:day":    "date"
+      },
+    });
+
+    Backbone.remotesync = Backbone.sync;
+    Backbone.sync = function (method, model, options) {
+      // use localstorage to pull out previous game data while we download
+      if ('localStorage' in window && window.localStorage !== null) {
+        var games = localStorage.getItem('games' + '-' + model.moment.format('YYYY-MM-DD'));
+        if (games) {
+          options.success(JSON.parse(games));
+        }
+      }
+
+      var resp = Backbone.remotesync(method, model, options);
+      resp.done(function (data) {
+        if ('localStorage' in window && window.localStorage !== null) {
+          localStorage.setItem('games' + '-' + model.moment.format('YYYY-MM-DD'), JSON.stringify(data));
+        }
+        if (data) {
+          options.success(data);
+        } else {
+          options.error("Record not found");
+        }
+      });
+
+    };
+
+    var Application = Backbone.View.extend({
+      events : {
+        "click #forward" : "clickGoForward",
+        "click #backward" : "clickGoBackward",
+      },
+      initialize: function () {
+        this.router = new MLBRouter();
+        this.today = moment().startOf('day');
+
+        this.gameDate = this.today.clone();
+        this.gameDateDom = $("#date");
+        this.games = {};
+        this.timerID = null;
+
+        this.router.on("route:date", function (year, month, day) {
+          //console.log("display", year, month, day);
+          this.gameDate.startOf('day').year(year).month(month -= 1).date(day);
+          this.games[this.gameDate] = new GameList({date : this.gameDate.toDate()});
+          new GameListView({collection : this.games[this.gameDate], el : $('#games').show()});
+
+          if (this.gameDate.year() === this.today.year() &&
+              this.gameDate.month() === this.today.month() &&
+              this.gameDate.date() === this.today.date()) {  
+            // on an interval do another fetch from the server for today's games
+            this.timerID = window.setInterval(function () { this.games[this.gameDate].fetch(); }.bind(this),
+                                              60 * 1000);
+          } else {
+            if (this.timerID !== null) {
+              window.clearInterval(this.timerID);
+              this.timerID = null;
+            }
+          }
+  
+          this.games[this.gameDate].fetch();
+          this.render();
+
+        }.bind(this), this);
+
+        Backbone.history.start({pushState: false});
+        this.go();
+      },
+      swipeGoForward : function swipeGoForward(ev) {
+        var app = this;
+        $("#games").hide("slide", { direction: "right" }, 1 * 1000,
+                         function () { app.clickGoForward.call(app, ev); });
+        return false;
+      },
+      clickGoForward : function clickGoForward(ev) {
+        this.goForward();
+        return false;
+      },
+      goForward : function goForward() {
+        this.gameDate.add('days', 1);
+        this.go();
+      },
+      swipeGoBackward : function swipeGoBackward(ev) {
+        var app = this;
+        $("#games").hide("slide", { direction: "left" }, 1 * 1000,
+                         function () { app.clickGoBackward.call(app, ev); });
+        return false;
+      },
+      clickGoBackward : function clickGoBackward(ev) {
+        this.goBackward();
+        return false;
+      },
+      goBackward : function goBackward() {
+        this.gameDate.subtract('days', 1);
+        this.go();
+      },
+      go : function () {
+        this.router.navigate(this.gameDate.format('YYYY/MM/DD'), {trigger: true});
+      },
+      render: function () {
+        this.gameDateDom.text(this.gameDate.format('LL'));
+        return this;
+      },
+    });
+
+    var MLBApp = new Application({el : $(".navbar")});
+
+    // This handles date selection via swipes
+    // swipe 'right' to go ahead one day
+    // swipe 'left' to back one day
+    $('body').hammer({ // hammer options go here
+    }).bind('swipe', function (ev) {
+      if (ev.direction === 'right') {
+        MLBApp.swipeGoForward();
+      } else if (ev.direction === 'left') {
+        MLBApp.swipeGoBackward();
+      }
+    });
+
   });
 });

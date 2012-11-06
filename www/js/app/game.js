@@ -300,8 +300,8 @@ define(function(require) {
 
   var GameList = Backbone.Collection.extend({
     model      : Game,
-    initialize : function (date) {
-      this.date = date || new Date();
+    initialize : function (options) {
+      this.date = options.date || new Date();
       this.moment = moment(this.date);
       this.year = this.moment.format("YYYY");
       this.month = this.moment.format("MM");
@@ -333,6 +333,8 @@ define(function(require) {
   var GameListView = Backbone.View.extend({
     initialize: function () {
       this.collection.bind('reset', this.render, this);
+      $(".loading").fadeIn();
+      $("#nogames").hide();
     },
     render: function () {
       // TODO: An app view should really handle this kind of stuff
@@ -342,6 +344,7 @@ define(function(require) {
         var view = new GameView({model: game});
         this.$el.append(view.render().$el);
       }.bind(this));
+      $("#nogames").toggle(this.collection.length <= 0);
       return this;
     }
   });

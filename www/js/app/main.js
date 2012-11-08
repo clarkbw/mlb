@@ -11,45 +11,15 @@ define(function (require) {
   var $ = require('jquery'),
       Backbone = require('backbone'),
       moment = require('moment'),
-      install = require('install'),
       Hammer = require('hammer'),
       enabledClick = false;
 
+  require('app/uiWebAppInstall')();
   require('jquery.hammer');
   require('jqueryui/effect');
   require('jqueryui/effect-slide');
   require('bootstrap/collapse');
   require('bootstrap-datepicker');
-
-  function onInstallStateChange() {
-    //Make sure DOM is ready before modifying it.
-    $(function () {
-      var dom = $('body'),
-          installDom = dom.find('.webapp-install');
-
-      if (install.state === 'installed' || install.state === 'unsupported') {
-        installDom.hide();
-          //Remove any even listener for the install button.
-        dom.off('click', '.webapp-install', install);
-        enabledClick = false;
-
-      } else if (install.state === 'uninstalled') {
-        // Installed now so no need to show the install button.
-        installDom.show();
-
-        if (!enabledClick) {
-          dom.on('click', '.webapp-install', install);
-
-          dom.find('.ios').on('click', function () {
-            //Close out the ios panel when clicked.
-            $(this).fadeOut();
-          });
-
-          enabledClick = true;
-        }
-      }
-    });
-  }
 
   var _game = require("app/game"),
       GameListView = _game.ListView,
@@ -58,11 +28,6 @@ define(function (require) {
   // Wait for the DOM to be ready before showing the network and appCache
   // state.
   $(function () {
-    install.on('change', onInstallStateChange);
-
-    // check immediately for installation to show/hide the install button
-    onInstallStateChange();
-
     var MLBRouter = Backbone.Router.extend({
       routes: {
         ":year/:month/:day":    "date"

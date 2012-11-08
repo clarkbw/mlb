@@ -135,7 +135,7 @@ define(function (require) {
       },
       swipeGoForward : function swipeGoForward(ev) {
         var app = this;
-        $("#games").hide("slide", { direction: "right" }, 1 * 1000,
+        $("#games").hide("slide", { direction: "left" }, 1 * 1000,
                          function () { app.clickGoForward.call(app, ev); });
         return false;
       },
@@ -149,7 +149,7 @@ define(function (require) {
       },
       swipeGoBackward : function swipeGoBackward(ev) {
         var app = this;
-        $("#games").hide("slide", { direction: "left" }, 1 * 1000,
+        $("#games").hide("slide", { direction: "right" }, 1 * 1000,
                          function () { app.clickGoBackward.call(app, ev); });
         return false;
       },
@@ -178,9 +178,9 @@ define(function (require) {
     $('body').hammer({ // hammer options go here
     }).bind('swipe', function (ev) {
       if (ev.direction === 'right') {
-        MLBApp.swipeGoForward();
-      } else if (ev.direction === 'left') {
         MLBApp.swipeGoBackward();
+      } else if (ev.direction === 'left') {
+        MLBApp.swipeGoForward();
       }
     });
 

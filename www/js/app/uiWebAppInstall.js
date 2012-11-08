@@ -22,7 +22,8 @@ define(function (require) {
     // URL with protocol and domain.
     function onInstallClick(evt) {
         var errorDom = dom.find('.webapp-error'),
-            installRequest = navigator.mozApps.install(location.href + 'manifest.webapp');
+            href = location.href.replace(location.hash, ''),
+            installRequest = navigator.mozApps.install(href + 'manifest.webapp');
 
         installRequest.onsuccess = function (data) {
             // Hide error just incase it was showing.

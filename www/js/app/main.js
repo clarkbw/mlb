@@ -19,7 +19,8 @@ define(function (require) {
   require('jqueryui/effect');
   require('jqueryui/effect-slide');
   require('bootstrap/collapse');
-  
+  require('bootstrap-datepicker');
+
   function onInstallStateChange() {
     //Make sure DOM is ready before modifying it.
     $(function () {
@@ -164,6 +165,13 @@ define(function (require) {
       go : function () {
         this.router.navigate(this.gameDate.format('YYYY/MM/DD'), {trigger: true});
       },
+      // must pass a moment object
+      goDate : function goDate(m) {
+        if (moment.isMoment(m)) {
+          this.gameDate = m;
+          this.go();
+        }
+      },
       render: function () {
         this.gameDateDom.text(this.gameDate.format('LL'));
         return this;
@@ -183,6 +191,20 @@ define(function (require) {
         MLBApp.swipeGoForward();
       }
     });
+
+    $('#date')
+      .data({ "date" : MLBApp.gameDate.format('YYYY/MM/DD'), "date-format" : "yyyy/mm/dd" })
+      .datepicker({
+        autoclose : true
+      })
+      .on('changeDate', function (ev) {
+        var m = moment(new Date(ev.date));
+        // for some reason we need to add a day
+        m.add('days', 1);
+        MLBApp.goDate(m);
+        $(this).datepicker('hide');
+      }
+    );
 
   });
 });

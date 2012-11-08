@@ -212,9 +212,11 @@
 							return $(this).css('z-index') != 'auto';
 						}).first().css('z-index'))+10;
 			var offset = this.component ? this.component.offset() : this.element.offset();
+			// XXX changes to align to the right hand side instead of the left
+			var component = this.component ? this.component : this.element;
 			this.picker.css({
 				top: offset.top + this.height,
-				left: offset.left,
+				left: offset.left - component.width(),
 				zIndex: zIndex
 			});
 		},

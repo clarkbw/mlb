@@ -485,9 +485,9 @@
 			}
 			if (element) {
 				element.change();
-				if (this.autoclose) {
-									this.hide();
-				}
+			}
+			if (this.autoclose) {
+				this.hide();
 			}
 		},
 

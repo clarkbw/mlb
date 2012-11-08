@@ -202,7 +202,6 @@ define(function (require) {
         // for some reason we need to add a day
         m.add('days', 1);
         MLBApp.goDate(m);
-        $(this).datepicker('hide');
       }
     );
 

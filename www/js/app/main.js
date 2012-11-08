@@ -104,7 +104,7 @@ define(function (require) {
         this.today = moment().startOf('day');
 
         this.gameDate = this.today.clone();
-        this.gameDateDom = $("#date");
+        this.gameDateDom = $("#date .txt");
         this.games = {};
         this.timerID = null;
 

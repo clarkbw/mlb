@@ -19,7 +19,8 @@
       "install": "github:wavysandbox/install/master",
       "hammer": "http://eightmedia.github.com/hammer.js/hammer.js",
       "jquery.hammer": "http://eightmedia.github.com/hammer.js/jquery.hammer.js",
-      "jqueryui": "local:/Users/bclark/Downloads/jquery-ui-1.9.1.custom/development-bundle/jqueryui"
+      "jqueryui": "local:/Users/bclark/Downloads/jquery-ui-1.9.1.custom/development-bundle/jqueryui",
+      "bootstrap-datepicker": "https://raw.github.com/eternicode/bootstrap-datepicker/master/js/bootstrap-datepicker.js"
     }
   }
 }

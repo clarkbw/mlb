@@ -81,7 +81,8 @@ define(function (require) {
 
       var resp = Backbone.remotesync(method, model, options);
       resp.done(function (data) {
-        if ('localStorage' in window && window.localStorage !== null) {
+        if ('localStorage' in window && window.localStorage !== null &&
+            'game' in data.data.games) {
           localStorage.setItem('games' + '-' + model.moment.format('YYYY-MM-DD'), JSON.stringify(data));
         }
         if (data) {

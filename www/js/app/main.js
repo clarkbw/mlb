@@ -38,8 +38,7 @@ define(function (require) {
     Backbone.sync = function (method, model, options) {
       var gameID = 'games' + '-' + model.moment.format('YYYY-MM-DD');
       // use localstorage to pull out previous game data while we download
-      if ('localStorage' in window && window.localStorage !== null &&
-          window.localStorage.hasOwnProperty(gameID)) {
+      if ('localStorage' in window && window.localStorage !== null) {
         try {
           var games = localStorage.getItem(gameID);
           if (games !== null) {
@@ -52,7 +51,9 @@ define(function (require) {
       resp.done(function (data) {
         if ('localStorage' in window && window.localStorage !== null &&
             'game' in data.data.games) {
-          localStorage.setItem(gameID, JSON.stringify(data));
+          try {
+            localStorage.setItem(gameID, JSON.stringify(data));
+          } catch (e) { console.log("error saving to local storage"); }
         }
         if (data) {
           options.success(data);

@@ -10,14 +10,14 @@ define(function (require) {
 
   var $ = require('jquery'),
       Backbone = require('backbone'),
-      moment = require('moment'),
-      Hammer = require('hammer'),
-      enabledClick = false;
+      moment = require('moment');
 
   require('app/uiWebAppInstall')();
   require('jquery.hammer');
   require('jqueryui/effect');
   require('jqueryui/effect-slide');
+  require('bootstrap/transition');
+  require('bootstrap/alert');
   require('bootstrap/collapse');
   require('bootstrap-datepicker');
 
@@ -36,27 +36,30 @@ define(function (require) {
 
     Backbone.remotesync = Backbone.sync;
     Backbone.sync = function (method, model, options) {
+      var gameID = 'games' + '-' + model.moment.format('YYYY-MM-DD');
       // use localstorage to pull out previous game data while we download
-      if ('localStorage' in window && window.localStorage !== null) {
-        var games = localStorage.getItem('games' + '-' + model.moment.format('YYYY-MM-DD'));
-        if (games) {
-          options.success(JSON.parse(games));
-        }
+      if ('localStorage' in window && window.localStorage !== null &&
+          window.localStorage.hasOwnProperty(gameID)) {
+        try {
+          var games = localStorage.getItem(gameID);
+          if (games !== null) {
+            options.success(JSON.parse(games));
+          }
+        } catch (e) { options.error("Game not found"); }
       }
 
       var resp = Backbone.remotesync(method, model, options);
       resp.done(function (data) {
         if ('localStorage' in window && window.localStorage !== null &&
             'game' in data.data.games) {
-          localStorage.setItem('games' + '-' + model.moment.format('YYYY-MM-DD'), JSON.stringify(data));
+          localStorage.setItem(gameID, JSON.stringify(data));
         }
         if (data) {
           options.success(data);
         } else {
-          options.error("Record not found");
+          options.error("Game not found");
         }
       });
-
     };
 
     var Application = Backbone.View.extend({

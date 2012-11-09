@@ -48,16 +48,26 @@ define(function (require) {
         dom = parentDom = parentDom || $('body');
 
         var apps = navigator.mozApps,
+            href = location.href.replace(location.hash, '') + 'manifest.webapp',
+            installed = false,
             request;
 
         // Test if web app installation is available. If so, test if
         // installed. See here for more information:
         // https://developer.mozilla.org/en/Apps/Getting_Started
         if (apps) {
-            request = apps.getSelf();
-            request.onsuccess = function () {
-                if (this.result) {
-                    // installed, nothing to do.
+            request = apps.getInstalled();
+            request.onsuccess = function() {
+                if (this.result && this.result.length) {
+                    for (var i = 0; i < this.result.length; i += 1) {
+                        if (href === this.result[i].manifestURL) {
+                            installed = true;
+                            break;
+                        }
+                    }
+                }
+                if (installed) {
+                    parentDom.find('.webapp-install').hide();
                 } else {
                     // Not installed, show installation button.
                     parentDom.find('.webapp-install')

@@ -37,10 +37,13 @@ define(function (require) {
     Backbone.remotesync = Backbone.sync;
     Backbone.sync = function (method, model, options) {
       var gameID = 'games' + '-' + model.moment.format('YYYY-MM-DD');
+      var games = null;
+      var today = moment();
+
       // use localstorage to pull out previous game data while we download
       if ('localStorage' in window && window.localStorage !== null) {
         try {
-          var games = localStorage.getItem(gameID);
+          games = localStorage.getItem(gameID);
           if (games !== null) {
             options.success(JSON.parse(games));
           }
@@ -50,7 +53,7 @@ define(function (require) {
       var resp = Backbone.remotesync(method, model, options);
       resp.done(function (data) {
         if ('localStorage' in window && window.localStorage !== null &&
-            'game' in data.data.games) {
+            'data' in data && 'games' in data.data && 'game' in data.data.games) {
           try {
             localStorage.setItem(gameID, JSON.stringify(data));
           } catch (e) { console.log("error saving to local storage"); }
@@ -81,7 +84,7 @@ define(function (require) {
           //console.log("display", year, month, day);
           this.gameDate.startOf('day').year(year).month(month -= 1).date(day);
           this.games[this.gameDate] = new GameList({date : this.gameDate.toDate()});
-          new GameListView({collection : this.games[this.gameDate], el : $('#games').show()});
+          new GameListView({collection : this.games[this.gameDate], el : $('#games').empty().fadeIn()});
 
           if (this.gameDate.year() === this.today.year() &&
               this.gameDate.month() === this.today.month() &&
@@ -138,6 +141,7 @@ define(function (require) {
       // must pass a moment object
       goDate : function goDate(m) {
         if (moment.isMoment(m)) {
+          $("#games").fadeOut();
           this.gameDate = m;
           this.go();
         }

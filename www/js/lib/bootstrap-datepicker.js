@@ -216,7 +216,7 @@
 			var component = this.component ? this.component : this.element;
 			this.picker.css({
 				top: offset.top + this.height,
-				left: offset.left - component.width(),
+				left: component.offset().left + component.width() - this.picker.width(),
 				zIndex: zIndex
 			});
 		},

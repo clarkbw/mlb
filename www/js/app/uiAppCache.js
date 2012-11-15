@@ -25,7 +25,10 @@ define(function (require) {
 
         // Wire up appCache-related button.
         parentDom.find('.updateButton').on('click', function (evt) {
-            appCache.swapCache();
+            try {
+                appCache.swapCache();
+            } catch (ignore) { }
+            // always reload even if the swapCache throws
             window.location.reload();
         });
 

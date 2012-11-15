@@ -12,6 +12,7 @@ define(function (require) {
       Backbone = require('backbone'),
       moment = require('moment');
 
+  require('app/uiAppCache')();
   require('app/uiWebAppInstall')();
   require('jquery.hammer');
   require('jqueryui/effect');
@@ -25,8 +26,7 @@ define(function (require) {
       GameListView = _game.ListView,
       GameList = _game.List;
 
-  // Wait for the DOM to be ready before showing the network and appCache
-  // state.
+  // Wait for the DOM to be ready
   $(function () {
     var MLBRouter = Backbone.Router.extend({
       routes: {
@@ -38,7 +38,6 @@ define(function (require) {
     Backbone.sync = function (method, model, options) {
       var gameID = 'games' + '-' + model.moment.format('YYYY-MM-DD');
       var games = null;
-      var today = moment();
 
       // use localstorage to pull out previous game data while we download
       if ('localStorage' in window && window.localStorage !== null) {

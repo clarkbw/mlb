@@ -40,3 +40,6 @@ body {
     text-transform: lowercase;
 }
 
+.updateAlert {
+    margin-top: 32px;
+}

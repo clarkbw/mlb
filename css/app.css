@@ -6056,7 +6056,7 @@ a.badge:hover {
   border-bottom-color: rgba(0, 0, 0, 0.2);
   position: absolute;
   top: -7px;
-  right: 32px;
+  right: 9px;
 }
 .datepicker:after {
   content: '';
@@ -6066,7 +6066,7 @@ a.badge:hover {
   border-bottom: 6px solid #ffffff;
   position: absolute;
   top: -6px;
-  right: 33px;
+  right: 10px;
 }
 .datepicker > div {
   display: none;

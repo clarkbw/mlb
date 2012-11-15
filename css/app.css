@@ -6329,3 +6329,6 @@ body {
 .game .ampm {
     text-transform: lowercase;
 }
+.updateAlert {
+    margin-top: 32px;
+}

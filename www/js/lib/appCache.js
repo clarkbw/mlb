@@ -11,8 +11,6 @@ define(function () {
      * https://developer.mozilla.org/en/Using_Application_Cache
      */
     appCache = {
-        cache: window.applicationCache,
-
         statusNames: [
             'uncached',
             'idle',
@@ -44,7 +42,10 @@ define(function () {
         },
 
         update: function () {
-            return cache.update();
+            try {
+                return cache.update();
+            } catch (invalidStateError) { }
+            return null;
         },
 
         swapCache: function () {

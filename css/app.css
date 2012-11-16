@@ -6311,8 +6311,12 @@ body {
 .navbar .brand {
     font-family: "Franklin Gothic FS ", "League Gothic", sans-serif;
     font-weight: bold;
-    color: #eee;
+    color: #111;
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.1), 0px 0px 30px rgba(255, 255, 255, 0.125);
     text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2), 0px 0px 20px rgba(255, 255, 255, 0.125);
+}
+.navbar .brand:hover {
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.1), 0px 0px 30px rgba(255, 255, 255, 0.4);
 }
 #date {
     cursor: pointer;

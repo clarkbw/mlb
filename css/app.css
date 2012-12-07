@@ -6336,3 +6336,27 @@ body {
 .updateAlert {
     margin-top: 32px;
 }
+#main .date {
+    text-align: center;
+    color: #fff;
+}
+#games {
+  -moz-transition-property: -moz-transform;
+  -moz-transition-duration: 300ms;
+  -moz-transition-timing-function: ease;
+  -moz-transition-delay: 0;
+  -webkit-transition-property: -webkit-transform;
+  -webkit-transition-duration: 300ms;
+  -webkit-transition-timing-function: ease;
+  -o-transition-property: -o-transform;
+  -o-transition-duration: 300ms;
+  -otransition-timing-function: ease;
+  
+  -webkit-transform: translateZ(0);
+}
+#games.left {
+  transform: translateX(-100%);
+}
+#games.right {
+  transform: translateX(100%);
+}

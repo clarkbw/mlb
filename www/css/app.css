@@ -48,3 +48,7 @@ body {
 .updateAlert {
     margin-top: 32px;
 }
+#main .date {
+    text-align: center;
+    color: #fff;
+}

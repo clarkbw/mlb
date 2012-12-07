@@ -15,8 +15,7 @@ define(function (require) {
   require('app/uiAppCache')();
   require('app/uiWebAppInstall')();
   require('jquery.hammer');
-  require('jqueryui/effect');
-  require('jqueryui/effect-slide');
+
   require('bootstrap/transition');
   require('bootstrap/alert');
   require('bootstrap/collapse');
@@ -108,8 +107,10 @@ define(function (require) {
       },
       swipeGoForward : function swipeGoForward(ev) {
         var app = this;
-        $("#games").hide("slide", { direction: "left" }, 1 * 1000,
-                         function () { app.clickGoForward.call(app, ev); });
+        $("#games").addClass("left").hide(function () { app.clickGoForward.call(app, ev); $(this).removeClass('left'); });
+
+        //$("#games").hide("slide", { direction: "left" }, 1 * 1000,
+        //                 function () { app.clickGoForward.call(app, ev); });
         return false;
       },
       clickGoForward : function clickGoForward(ev) {
@@ -122,8 +123,10 @@ define(function (require) {
       },
       swipeGoBackward : function swipeGoBackward(ev) {
         var app = this;
-        $("#games").hide("slide", { direction: "right" }, 1 * 1000,
-                         function () { app.clickGoBackward.call(app, ev); });
+        $("#games").addClass('right').hide(function () { app.clickGoBackward.call(app, ev); $(this).removeClass('right'); });
+        //
+        //$("#games").hide("slide", { direction: "right" }, 1 * 1000,
+        //                 function () { app.clickGoBackward.call(app, ev); });
         return false;
       },
       clickGoBackward : function clickGoBackward(ev) {
@@ -156,7 +159,7 @@ define(function (require) {
     // This handles date selection via swipes
     // swipe 'right' to go ahead one day
     // swipe 'left' to back one day
-    $('body').hammer({ // hammer options go here
+    $('html').hammer({ // hammer options go here
     }).bind('swipe', function (ev) {
       if (ev.direction === 'right') {
         MLBApp.swipeGoBackward();

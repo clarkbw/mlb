@@ -44,7 +44,7 @@
         <div class="alert alert-block" id="nogames" style="display:none;">
             <button type="button" class="close" data-dismiss="alert">x</button>
             <h4>No Games</h4>
-            Sorry, there are no games scheduled for this date.
+            <p>Sorry, there are no games scheduled for this date.</p>
         </div>
 
         <table class="table">
@@ -79,12 +79,17 @@
             <div><%= home().get("team_name") %></div>
         </td>
         <td>
+            <% if (is_nixed()) { %>
+                <div><%= get("status").status %></div>
+                <div class="hidden-phone"><%= get("status").reason %></div>
+            <% } else %>
             <% if (is_after_game()) { %>
                 Final<% if (has_extra_innings()) { %> / <%= inning() %><% } %>
-            <% } %>
+            <% } else %>
             <% if (is_before_game()) { %>
                 <div><%= home().get("time") %><span class='ampm'><%= home().get("ampm") %></span> <%= home().get("time_zone") %></div>
-                <div><%= local_time() %><% } %></div>
+                <div><%= local_time() %></div>
+            <% } else %>
             <% if (is_during_game()) { %>
                 <% if (is_top_of_inning()) { %><i class="icon-chevron-up icon-white"></i><% } %>
                 <% if (is_bottom_of_inning()) { %><i class="icon-chevron-down icon-white"></i><% } %>

@@ -310,6 +310,8 @@ define(function(require) {
     url : function () {
       return "https://mlb-proxy.vcap.mozillalabs.com" +
               "/" + this.year + "/" + this.month + "/" + this.day;
+      // XXX DEBUG
+      //return "http://localhost:8811" +
     },
     parse: function (response) {
       return response.data.games.game;

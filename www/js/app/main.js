@@ -108,9 +108,6 @@ define(function (require) {
       swipeGoForward : function swipeGoForward(ev) {
         var app = this;
         $("#games").addClass("left").hide(function () { app.clickGoForward.call(app, ev); $(this).removeClass('left'); });
-
-        //$("#games").hide("slide", { direction: "left" }, 1 * 1000,
-        //                 function () { app.clickGoForward.call(app, ev); });
         return false;
       },
       clickGoForward : function clickGoForward(ev) {
@@ -124,9 +121,6 @@ define(function (require) {
       swipeGoBackward : function swipeGoBackward(ev) {
         var app = this;
         $("#games").addClass('right').hide(function () { app.clickGoBackward.call(app, ev); $(this).removeClass('right'); });
-        //
-        //$("#games").hide("slide", { direction: "right" }, 1 * 1000,
-        //                 function () { app.clickGoBackward.call(app, ev); });
         return false;
       },
       clickGoBackward : function clickGoBackward(ev) {

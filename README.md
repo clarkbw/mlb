@@ -1,3 +1,7 @@
+# Discontinued
+
+I'm not longer actively working on this application.  The mlb-proxy has been shutdown so this application no longer works.
+
 # MLB App
 
 This is an MLB (Major League Baseball) Application.  It's a very simple responsive designed application that retrieves scores from the MLB site in a similar way that the MLB Chrome Extension does.  This app does require the use of the [mlb-proxy](https://github.com/clarkbw/mlb-proxy/) to proxy the MLB API due to the [CORS](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing) restrictions currently in place with the MLB API.

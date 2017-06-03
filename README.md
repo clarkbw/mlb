@@ -1,5 +1,7 @@
 # Discontinued
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/clarkbw/mlb.svg)](https://greenkeeper.io/)
+
 I'm not longer actively working on this application.  The mlb-proxy has been shutdown so this application no longer works.
 
 # MLB App
